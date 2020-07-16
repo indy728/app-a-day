@@ -10,6 +10,9 @@ const oneCallEndpoint = (lon, lat) => `https://api.openweathermap.org/data/2.5/o
 const GeoCoordsType = new GraphQLObjectType({
   name: 'GeoCoords',
   fields: () => ({
+    name: {
+      type: GraphQLString,
+    },
     coord: {
       type: new GraphQLObjectType({
         name: 'LatLon',
@@ -45,21 +48,6 @@ const CurrentWeatherType = new GraphQLObjectType({
   }
   })
 })
-
-// const WeatherDetails = new GraphQLObjectType({
-//   name: 'WeatherDetails',
-//   fields: () => ({
-//     main: {
-//       type: GraphQLString,
-//     },
-//     description: {
-//       type: GraphQLString,
-//     },
-//     icon: {
-//       type: GraphQLString,
-//     },
-//   }),
-// });
 
 const WeatherType = new GraphQLObjectType({
   name: 'Weather',
