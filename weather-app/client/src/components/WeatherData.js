@@ -83,11 +83,11 @@ const TempRow = styled.div`
     }
   }
 
-  @media ${device.md} {
+  /* @media ${device.md} {
     flex-direction: row;
     justify-content: space-evenly;
     height: 10rem;
-  }
+  } */
 `;
 
 const WeatherDetails = styled.div``;
