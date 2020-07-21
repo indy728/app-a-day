@@ -5,7 +5,7 @@ const {
 } = require('graphql');
 
 const zipEndpoint = (zipcode) => `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},us&appid=${process.env.WEATHER_API_KEY}`;
-const oneCallEndpoint = (lon, lat) => `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}`;
+const oneCallEndpoint = (lon, lat, units) => `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}&units=${units}`;
 
 const GeoCoordsType = new GraphQLObjectType({
   name: 'GeoCoords',
@@ -83,9 +83,10 @@ const RootQuery = new GraphQLObjectType({
       args: {
         lat: { type: GraphQLString },
         lon: { type: GraphQLString },
+        units: { type: GraphQLString },
       },
       resolve(parent, args) {
-        return fetch(oneCallEndpoint(args.lon, args.lat))
+        return fetch(oneCallEndpoint(args.lon, args.lat, args.units))
           .then(response => response.json())
           .catch(er => console.error(er));
       }
