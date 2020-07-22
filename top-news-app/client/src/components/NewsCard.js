@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { device } from 'themes/media';
 
-
 const Wrapper = styled.div`
   width: 30rem;
   padding: 2rem 3rem;
@@ -70,10 +69,9 @@ const NewsImage = styled.div`
 const NewsCard = (props) => {
   const { source, title, description, url, image } = props;
   const href = (value) => (
-    <a href={url} target="_blank">{value}</a>
+    <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>
   )
     
-
   return (
     <Wrapper>
       <NewsImage src={image} />
