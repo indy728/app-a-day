@@ -1,0 +1,29 @@
+{
+  "name": "top-news-app",
+  "version": "1.0.0",
+  "description": "Use News API for default Uighur Muslim xenocide news or search keywords",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "npm-run-all --parallel server client"
+  },
+  "keywords": [
+    "news"
+  ],
+  "author": "Indy",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.3.0",
+    "newsapi": "^2.4.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
