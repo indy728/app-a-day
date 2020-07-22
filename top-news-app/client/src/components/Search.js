@@ -5,13 +5,18 @@ import { device } from 'themes/media';
 
 const Wrapper = styled.div`
   width: 100%;
+  height: 100vh;
   background-color: rgba(4, 30, 21, .8);
-  height: 11rem;
   justify-content: center;
   position: fixed;
   top: 0;
+  flex-direction: column-reverse;
 
-  @media ${device.sm} {}
+
+  @media ${device.sm} {
+    height: 11rem;
+    flex-direction: column;
+  }
 
   @media ${device.md} {}
 
@@ -21,13 +26,26 @@ const Wrapper = styled.div`
 `;
 
 const Radio = styled.div`
-  flex-direction: row;
-  justify-content: space-evenly;
-  `;
+
+  @media ${device.sm} {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+`;
 
 const Input = styled.div`
-  flex-direction: row;
-  justify-content: space-between;
+  
+
+  input {
+    width: 30rem;
+    height: 3rem;
+    font-size: 1.8rem;
+  }
+
+  @media ${device.sm} {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
 `;
 
 const Form = styled.form`
@@ -35,6 +53,7 @@ const Form = styled.form`
 
   > div {
     width: 100%;
+    margin: .5rem 0;
   }
 
   @media ${device.sm} {
@@ -52,24 +71,44 @@ const Submit = styled.div`
 `;
 
 const Search = (props) => {
-  const { prop } = props;
-
-  const submit = () => document.forms['search-form'].submit();
+  const { submit, value, searchChanged, searchOption, searchOptionChanged } = props;
 
   return (
     <Wrapper>
-      <Form>
+      <Form id="search-form">
         <Input>
-          <input type="text" />
+          <input type="text" value={value} onChange={(e) => searchChanged(e)} />
           <Submit 
-            onClick={submit}
+            onClick={(e) => submit(e)}
           >
             Search News
           </Submit>
         </Input>
         <Radio>
-          <input type="radio" name="searchType" id="topStories" /><label for="topStories">Search Top Stories</label>
-          <input type="radio" name="searchType" id="everything" /><label for="everything">Search Everything</label>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="searchType"
+                value="top"
+                checked={searchOption === 'top'}
+                onChange={searchOptionChanged}
+              />
+              Search Top Stories
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="searchType"
+                value="everything"
+                checked={searchOption === 'everything'}
+                onChange={searchOptionChanged}
+              />
+              Search Everything
+            </label>
+          </div>
         </Radio>
       </Form>
     </Wrapper>

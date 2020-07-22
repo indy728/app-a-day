@@ -42,7 +42,7 @@ const showSearch = (props) => {
 
   return (
     <Wrapper onClick={clicked}>
-      <FontAwesomeIcon icon={display ? faTimes : faSearch} size="xl" />
+      <FontAwesomeIcon icon={display ? faTimes : faSearch} size="1x" />
     </Wrapper>
   );
 };
