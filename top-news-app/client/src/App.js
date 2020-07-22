@@ -7,6 +7,7 @@ function App() {
     <>
       <GlobalStyle />
       <News />
+      <a href="https://kyledevlinmurray.com">Back to Kyle's Homepage</a>
     </>
   );
 }

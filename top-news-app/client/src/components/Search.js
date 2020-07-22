@@ -11,6 +11,9 @@ const Wrapper = styled.div`
   top: 0;
   flex-direction: column-reverse;
 
+  * {
+    color: white;
+  }
 
   @media ${device.sm} {
     height: 11rem;
@@ -33,17 +36,21 @@ const Radio = styled.div`
 `;
 
 const Input = styled.div`
-  
-
   input {
     width: 30rem;
     height: 3rem;
     font-size: 1.8rem;
+    color: black;
+    padding: 0 1rem;
   }
 
   @media ${device.sm} {
     flex-direction: row;
     justify-content: space-evenly;
+
+    input {
+      text-align: left;
+    }
   }
 `;
 
@@ -66,7 +73,19 @@ const Form = styled.form`
 `;
 
 const Submit = styled.div`
+  width: 10rem;
+  background-color: lightgreen;
+  padding: .5rem 1rem;
+  border: 2px solid white;
+  border-radius: 2px;
+`;
 
+const RadioWrapper = styled.label`
+  flex-direction: row;
+
+  > :first-child {
+    margin-right: 1rem;
+  }
 `;
 
 const Search = (props) => {
@@ -80,12 +99,11 @@ const Search = (props) => {
           <Submit 
             onClick={(e) => submit(e)}
           >
-            Search News
+            Go
           </Submit>
         </Input>
         <Radio>
-          <div>
-            <label>
+          <RadioWrapper>
               <input
                 type="radio"
                 name="searchType"
@@ -93,11 +111,9 @@ const Search = (props) => {
                 checked={searchOption === 'top'}
                 onChange={searchOptionChanged}
               />
-              Search Top Stories
-            </label>
-          </div>
-          <div>
-            <label>
+              <p>Search Top Stories</p>
+          </RadioWrapper>
+          <RadioWrapper>
               <input
                 type="radio"
                 name="searchType"
@@ -105,9 +121,8 @@ const Search = (props) => {
                 checked={searchOption === 'everything'}
                 onChange={searchOptionChanged}
               />
-              Search Everything
-            </label>
-          </div>
+              <p>Search Everything</p>
+          </RadioWrapper>
         </Radio>
       </Form>
     </Wrapper>

@@ -44,7 +44,7 @@ const ALL_ARTICLES = gql`
 `;
 
 const Wrapper = styled.div`
-  margin-top: 5rem;
+  margin: 5rem 0;
 
   @media ${device.sm} {}
 
