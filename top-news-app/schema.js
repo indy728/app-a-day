@@ -60,7 +60,6 @@ const RootQuery = new GraphQLObjectType({
           language: 'en',
         })
         .then(res => {
-          console.log(res)
           return res
         })
         .catch(er => console.error(er));
