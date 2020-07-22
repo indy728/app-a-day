@@ -12,6 +12,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Weather />
+      <a href="https://kyledevlinmurray.com">Back to Kyle's Homepage</a>
     </ThemeProvider>
   );
 }

@@ -37,7 +37,7 @@ const WEATHER_QUERY = gql`
 const Wrapper = styled.div`
   width: 30rem;
   padding: 4rem;
-  margin: 5rem 0;
+  margin-bottom: 5rem;
   border-radius: 4px;
   background-image: linear-gradient(165deg, white 35%, grey);
 

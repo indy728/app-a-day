@@ -6,7 +6,8 @@ import WeatherOptions from './WeatherOptions';
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  margin: 5rem 0;
 `;
 
 const initialState = {
