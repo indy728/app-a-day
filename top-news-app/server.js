@@ -1,13 +1,12 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
+const cors = require('cors');
 require('dotenv').config();
 const schema = require('./schema');
 
-
 const app = express();
 
-// un comment when you get CORS errors
-// app.use(cors());
+app.use(cors());
 
 app.use('/graphql', graphqlHTTP({
   schema,
