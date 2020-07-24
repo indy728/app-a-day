@@ -1,0 +1,27 @@
+{
+  "name": "love-list-app",
+  "version": "1.0.0",
+  "description": "for Lexi <3",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server",
+    "server": "nodemon server/devserver.js",
+    "client": "npm start --prefix client",
+    "dev": "npm-run-all --parallel server client"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.3.0",
+    "mongoose": "^5.9.25"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "npm-run-all": "^4.1.5"
+  }
+}
