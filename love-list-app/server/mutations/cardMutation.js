@@ -24,7 +24,7 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLID }
       },
       resolve(parentValue, { id }) {
-        return Card.deleteOne({ _id: ObjectId(id) });
+        return Card.deleteOne({ _id: mongoose.Types.ObjectId(id) });
       }
     }
   }

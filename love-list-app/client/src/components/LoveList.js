@@ -7,7 +7,8 @@ import AddCard from './AddCard';
 import CardList from './CardList';
 
 const Wrapper = styled.div`
-  padding: 5rem 0;
+  width: 100%;
+  padding: 5rem;
 
   @media ${device.sm} {}
 
@@ -87,7 +88,7 @@ class LoveList extends Component {
 LoveList.propTypes = {
 };
 
-const mutation = gql`
+const addCard = gql`
   mutation AddCard($dateString: String!, $dateNumber: String!, $content: String!) {
     addCard(dateString: $dateString, dateNumber: $dateNumber, content: $content) {
       _id
@@ -95,4 +96,4 @@ const mutation = gql`
   }
 `;
 
-export default graphql(mutation)(LoveList);
+export default graphql(addCard)(LoveList);
