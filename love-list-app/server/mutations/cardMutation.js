@@ -10,11 +10,12 @@ const mutation = new GraphQLObjectType({
     addCard: {
       type: CardType,
       args: {
-        date: { type: GraphQLNonNull(GraphQLString) },
+        dateString: { type: GraphQLNonNull(GraphQLString) },
+        dateNumber: { type: GraphQLNonNull(GraphQLString) },
         content: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve(parentValue, { date, content }) {
-        return (new Card({ date, content })).save()
+      resolve(parentValue, { dateString, dateNumber, content }) {
+        return (new Card({ dateString, dateNumber, content })).save()
       }
     },
     deleteCard: {

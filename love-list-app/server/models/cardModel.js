@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CardSchema = new Schema({
-  date: { type: String },
+  dateString: { type: String },
+  dateNumber: { type: String },
   content: { type: String },
 });
 

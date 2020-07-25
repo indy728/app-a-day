@@ -10,7 +10,8 @@ const CardType = new GraphQLObjectType({
   name:  'CardType',
   fields: () => ({
     _id: { type: GraphQLID },
-    date: { type: GraphQLString },
+    dateString: { type: GraphQLString },
+    dateNumber: { type: GraphQLString },
     content: { type: GraphQLString },
   }),
 });
