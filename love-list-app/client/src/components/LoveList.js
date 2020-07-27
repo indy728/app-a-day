@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { device } from 'themes/media';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import AddCard from './AddCard';
 import CardList from './CardList';
+import { useMutation, useQuery } from 'react-apollo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { ADD_CARD, DELETE_CARD } from './mutations';
+import { GET_CARDS } from './queries';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -21,38 +22,42 @@ const Wrapper = styled.div`
   @media ${device.xl} {}
 `;
 
-// const AddCardButton = styled.div`
-//   width: 4rem;
-//   height: 4rem;
-//   position: fixed;
-//   border-radius: 50%;
-//   background-color: ${({ theme }) => theme.white};
-//   box-shadow: 0 0 2px ${({ theme }) => theme.primary};
-//   top: 1rem;
-//   right: 1rem;
-//   justify-content: center;
-//   font-size: 1.4rem;
+const AddCardButton = styled.div`
+  width: 4rem;
+  height: 4rem;
+  position: fixed;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.white};
+  box-shadow: 0 0 2px ${({ theme }) => theme.primary};
+  top: 1rem;
+  right: 1rem;
+  justify-content: center;
+  font-size: 1.4rem;
 
-//   * {
-//     color: ${({ theme }) => theme.primary};
-//   }
-// `;
+  * {
+    color: ${({ theme }) => theme.primary};
+  }
+`;
 
-const initialState = {
-  showForm: false,
-  value: '',
-}
+const LoveList = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [value, setValue] = useState('');
+  const { loading: getCardsLoading, error: getCardsError, data: getCardsData} = useQuery(GET_CARDS)
+  const [deleteCard] = useMutation(DELETE_CARD, {
+    refetchQueries: [{ query: GET_CARDS }],
+    awaitRefetchQueries: true,
+  });
+  const [addCard] = useMutation(ADD_CARD, {
+    refetchQueries: [{ query: GET_CARDS }],
+    awaitRefetchQueries: true,
+  });
 
-class LoveList extends Component {
-  state = {
-    showForm: false,
-    value: '',
-    // valid: false,
+  const setInitialState = () => {
+    setShowForm(false);
+    setValue('');
   }
 
-  addCardHandler = () => {
-    const { value: content } = this.state;
-
+  const addCardHandler = () => {
     const dateTime = new Date();
     const dateOptions = { 
       hour: '2-digit',
@@ -63,67 +68,44 @@ class LoveList extends Component {
     };
     const dateString = dateTime.toLocaleDateString("en-US", dateOptions);
     const dateNumber = `${Date.parse(dateTime)}`;
-    this.props.mutate({
+
+    addCard({
       variables: {
         dateString,
         dateNumber,
-        content,
-      },
-    }).then(res => console.log(res))
-
-    this.setState(initialState)
+        content: value,
+      }
+    })
+    setInitialState();
   }
 
-  cancelFormHandler = () => {
-    this.setState(initialState)
+  const inputChangedHandler = (event) => {
+    setValue(event.target.value);
   }
 
-  inputChangedHandler = (event) => {
-    this.setState({ value: event.target.value})
+  const toggleFormHandler = () => {
+    setShowForm(!showForm);
   }
 
-  toggleFormHandler = () => {
-    this.setState((prevState) => ({ showForm: !prevState.showForm }));
-  }
-
-  render() {
-    const { showForm, value } = this.state;
-    const cardList = <CardList />
-
-    return (
-      <Wrapper>
-        <CardList 
-          formVisible={showForm}
-          formSubmit={this.addCardHandler}
-          formCancel={this.cancelFormHandler}
-          formChanged={this.inputChangedHandler}
-          formValue={value}
-          formToggle={this.toggleFormHandler}
-        />
-        {/* <AddCard
-          visible={showForm}
-          submit={this.addCardHandler}
-          cancel={this.toggleFormHandler}
-          changed={this.inputChangedHandler}
-          value={value}
-        />
-        <AddCardButton onClick={this.toggleFormHandler}>
-          <FontAwesomeIcon icon={faPlus} size="2x" />
-        </AddCardButton> */}
-      </Wrapper>
-    );
-  } 
+  return (
+    <Wrapper>
+      <CardList 
+        data={getCardsData || null}
+        deleteCard={deleteCard}
+        editCard={null}
+      />
+      <AddCard
+        visible={showForm}
+        submit={addCardHandler}
+        cancel={setInitialState}
+        changed={inputChangedHandler}
+        value={value}
+      />
+    <AddCardButton onClick={toggleFormHandler}>
+      <FontAwesomeIcon icon={faPlus} size="2x" />
+    </AddCardButton>
+    </Wrapper>
+  );
 }
 
-LoveList.propTypes = {
-};
-
-const ADD_CARD = gql`
-  mutation ADD_CARD($dateString: String!, $dateNumber: String!, $content: String!) {
-    addCard(dateString: $dateString, dateNumber: $dateNumber, content: $content) {
-      _id
-    }
-  }
-`;
-
-export default graphql(ADD_CARD)(LoveList);
+export default LoveList;
