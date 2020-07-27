@@ -5,6 +5,8 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import AddCard from './AddCard';
 import CardList from './CardList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -18,6 +20,23 @@ const Wrapper = styled.div`
 
   @media ${device.xl} {}
 `;
+
+// const AddCardButton = styled.div`
+//   width: 4rem;
+//   height: 4rem;
+//   position: fixed;
+//   border-radius: 50%;
+//   background-color: ${({ theme }) => theme.white};
+//   box-shadow: 0 0 2px ${({ theme }) => theme.primary};
+//   top: 1rem;
+//   right: 1rem;
+//   justify-content: center;
+//   font-size: 1.4rem;
+
+//   * {
+//     color: ${({ theme }) => theme.primary};
+//   }
+// `;
 
 const initialState = {
   showForm: false,
@@ -49,14 +68,17 @@ class LoveList extends Component {
         dateString,
         dateNumber,
         content,
-      }
+      },
     }).then(res => console.log(res))
 
     this.setState(initialState)
   }
 
-  inputChangedHandler = (event) => {
+  cancelFormHandler = () => {
+    this.setState(initialState)
+  }
 
+  inputChangedHandler = (event) => {
     this.setState({ value: event.target.value})
   }
 
@@ -66,20 +88,28 @@ class LoveList extends Component {
 
   render() {
     const { showForm, value } = this.state;
+    const cardList = <CardList />
 
     return (
       <Wrapper>
-        <CardList />
-        <AddCard
+        <CardList 
+          formVisible={showForm}
+          formSubmit={this.addCardHandler}
+          formCancel={this.cancelFormHandler}
+          formChanged={this.inputChangedHandler}
+          formValue={value}
+          formToggle={this.toggleFormHandler}
+        />
+        {/* <AddCard
           visible={showForm}
           submit={this.addCardHandler}
           cancel={this.toggleFormHandler}
           changed={this.inputChangedHandler}
           value={value}
         />
-        <div onClick={this.toggleFormHandler}>
-          Add
-        </div>
+        <AddCardButton onClick={this.toggleFormHandler}>
+          <FontAwesomeIcon icon={faPlus} size="2x" />
+        </AddCardButton> */}
       </Wrapper>
     );
   } 
@@ -88,12 +118,12 @@ class LoveList extends Component {
 LoveList.propTypes = {
 };
 
-const addCard = gql`
-  mutation AddCard($dateString: String!, $dateNumber: String!, $content: String!) {
+const ADD_CARD = gql`
+  mutation ADD_CARD($dateString: String!, $dateNumber: String!, $content: String!) {
     addCard(dateString: $dateString, dateNumber: $dateNumber, content: $content) {
       _id
     }
   }
 `;
 
-export default graphql(addCard)(LoveList);
+export default graphql(ADD_CARD)(LoveList);

@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { Componet } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
 import { device } from 'themes/media';
 import gql from 'graphql-tag';
 import { graphql, useMutation, useQuery } from 'react-apollo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
+import AddCard from './AddCard';
 
 
 const Wrapper = styled.div`
@@ -73,9 +74,35 @@ const Icon = styled.div`
   }
 `;
 
+
+const AddCardButton = styled.div`
+  width: 4rem;
+  height: 4rem;
+  position: fixed;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.white};
+  box-shadow: 0 0 2px ${({ theme }) => theme.primary};
+  top: 1rem;
+  right: 1rem;
+  justify-content: center;
+  font-size: 1.4rem;
+
+  * {
+    color: ${({ theme }) => theme.primary};
+  }
+`;
+
 const DELETE_CARD = gql`
   mutation DeletCard($id: ID!) {
     deleteCard(id: $id) {
+      _id
+    }
+  }
+`;
+
+const ADD_CARD = gql`
+  mutation AddCard($dateString: String!, $dateNumber: String!, $content: String!) {
+    addCard(dateString: $dateString, dateNumber: $dateNumber, content: $content) {
       _id
     }
   }
@@ -92,21 +119,50 @@ const GET_CARDS = gql`
   }
 `;
 
-const CardList = (props) => {
+const CardList = ({ formVisible, formSubmit, formCancel, formChanged, formValue, formToggle }) => {
   const { loading: getCardsLoading, error: getCardsError, data: getCardsData} = useQuery(GET_CARDS)
-  const [deleteCard, { data: deleteCardData}] = useMutation(DELETE_CARD);
-  const clickDelete = (id) => deleteCard({ variables: { id }})
+  const [deleteCard, { data: deleteCardData}] = useMutation(DELETE_CARD, {
+    refetchQueries: [{ query: GET_CARDS }],
+    awaitRefetchQueries: true,
+  });
+  const [addCard, { data: addCardData }] = useMutation(ADD_CARD, {
+    refetchQueries: [{ query: GET_CARDS }],
+    awaitRefetchQueries: true,
+  });
+
+  const addCardHandler = () => {
+    const content = formValue;
+    const dateTime = new Date();
+    const dateOptions = { 
+      hour: '2-digit',
+      minute: '2-digit',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    const dateString = dateTime.toLocaleDateString("en-US", dateOptions);
+    const dateNumber = `${Date.parse(dateTime)}`;
+
+    addCard({
+      variables: {
+        dateString,
+        dateNumber,
+        content,
+      }
+    })
+    formCancel();
+  };
 
   let cardList = null;
 
   if ( getCardsData && getCardsData.cards ) {
     const { cards } = getCardsData;
-    cardList = getCardsData.cards.sort((a, b) => Number(b.dateNumber) - Number(a.dateNumber)).map((card) => (
+    cardList = cards.sort((a, b) => Number(b.dateNumber) - Number(a.dateNumber)).map((card) => (
       <Card key={card._id}>
         <Icon className="icon edit">
           <FontAwesomeIcon icon={faEdit} />
         </Icon>
-        <Icon className="icon close" onClick={() => clickDelete(card._id)}>
+        <Icon className="icon close" onClick={() => deleteCard({ variables: { id: card._id } })} >
           <FontAwesomeIcon icon={faTimes} />
         </Icon>
         <div className="date">{card.dateString}</div>
@@ -118,6 +174,16 @@ const CardList = (props) => {
   return (
     <Wrapper>
       {cardList}
+      <AddCard
+          visible={formVisible}
+          submit={addCardHandler}
+          cancel={formCancel}
+          changed={formChanged}
+          value={formValue}
+        />
+      <AddCardButton onClick={formToggle}>
+        <FontAwesomeIcon icon={faPlus} size="2x" />
+      </AddCardButton>
     </Wrapper>
   );
 }
