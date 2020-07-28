@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { device } from 'themes/media';
 import AddCard from './AddCard';
 import CardList from './CardList';
-import { useMutation, useQuery } from 'react-apollo';
+// import { useMutation, useQuery } from 'react-apollo';
+import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ADD_CARD, DELETE_CARD } from './mutations';
@@ -28,14 +29,20 @@ const AddCardButton = styled.div`
   position: fixed;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.white};
-  box-shadow: 0 0 2px ${({ theme }) => theme.primary};
+  box-shadow: 0 0 4px 2px ${({ theme }) => theme.primary};
   top: 1rem;
   right: 1rem;
   justify-content: center;
   font-size: 1.4rem;
+  transition: .1s all ease-out;
 
   * {
     color: ${({ theme }) => theme.primary};
+  }
+
+  :hover {
+    cursor: pointer;
+    transform: scale(1.1);
   }
 `;
 
@@ -87,13 +94,21 @@ const LoveList = () => {
     setShowForm(!showForm);
   }
 
-  return (
-    <Wrapper>
-      <CardList 
-        data={getCardsData || null}
+  let cardList = null;
+
+  if (getCardsLoading) cardList = <div>...loading</div>
+  if (getCardsError) cardList = <div>Error</div>
+  if (getCardsData && getCardsData.cards) cardList = (
+    <CardList 
+        data={getCardsData.cards}
         deleteCard={deleteCard}
         editCard={null}
       />
+  )
+
+  return (
+    <Wrapper>
+      {cardList}
       <AddCard
         visible={showForm}
         submit={addCardHandler}

@@ -30,20 +30,29 @@ const Card = styled.div`
   }
 
   .date {
-    font-size: 2.4rem;
+    font-size: 1.2rem;
     font-family: serif;
-    font-weight: bold;
+    margin-top: 2rem;
+    justify-self: flex-end;
   }
 
   .content {
-    font-size: 2rem;
-    width: 100%;
-    margin-top: 2rem;
+    font-size: 2.2rem;
+    /* width: 100%; */
+    font-family: sans-serif;
   }
 
   :hover {
     .icon {
       display: flex;
+    }
+  }
+
+  @media ${device.lg} {
+    align-items: flex-start;
+
+    .content {
+      text-align: left;
     }
   }
 `;
@@ -52,9 +61,15 @@ const Icon = styled.div`
   position: absolute;
   right: 0;
   padding: .5rem;
+  transition: .1s all ease-in-out;
 
   * {
     color: ${({ theme }) => theme.primary};
+  }
+
+  :hover {
+    cursor: pointer;
+    transform: scale(1.1);
   }
 
   &.close {
@@ -71,28 +86,24 @@ const Icon = styled.div`
 `;
 
 const CardList = ({ data, deleteCard, editCard }) => {
-  let cardList = null;
+  const cards = data.slice()
+  const cardList = cards.sort((a, b) => Number(b.dateNumber) - Number(a.dateNumber))
+    .map((card) => { 
+      const { _id: id, dateString, content } = card;
 
-  if ( data && data.cards ) {
-    const { cards } = data;
-    cardList = cards.sort((a, b) => Number(b.dateNumber) - Number(a.dateNumber))
-      .map((card) => { 
-        const { _id: id, dateString, content } = card;
-
-        return (
-          <Card key={id}>
-            <Icon className="icon edit" onClick={() => editCard({ variables: { id: card._id } })}>
-              <FontAwesomeIcon icon={faEdit} />
-            </Icon>
-            <Icon className="icon close" onClick={() => deleteCard({ variables: { id: card._id } })}>
-              <FontAwesomeIcon icon={faTimes} />
-            </Icon>
-            <div className="date">{dateString}</div>
-            <div className="content">{content}</div>
-          </Card>
-        )
-      })
-  }
+      return (
+        <Card key={id}>
+          <Icon className="icon edit" onClick={() => editCard({ variables: { id: card._id } })}>
+            <FontAwesomeIcon icon={faEdit} />
+          </Icon>
+          <Icon className="icon close" onClick={() => deleteCard({ variables: { id: card._id } })}>
+            <FontAwesomeIcon icon={faTimes} />
+          </Icon>
+          <div className="content">{content}</div>
+          <div className="date">{dateString}</div>
+        </Card>
+      )
+    })
 
   return (
     <Wrapper>

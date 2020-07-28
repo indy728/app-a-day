@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const DELETE_CARD = gql`
   mutation DeletCard($id: ID!) {
