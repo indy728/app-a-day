@@ -12,6 +12,9 @@ export const ADD_CARD = gql`
   mutation AddCard($dateString: String!, $dateNumber: String!, $content: String!) {
     addCard(dateString: $dateString, dateNumber: $dateNumber, content: $content) {
       _id
+      dateString
+      dateNumber
+      content
     }
   }
 `;

@@ -50,13 +50,26 @@ const LoveList = () => {
   const [showForm, setShowForm] = useState(false);
   const [value, setValue] = useState('');
   const { loading: getCardsLoading, error: getCardsError, data: getCardsData} = useQuery(GET_CARDS)
+  
+  // Sends another request from our backend which is not ideal
   const [deleteCard] = useMutation(DELETE_CARD, {
     refetchQueries: [{ query: GET_CARDS }],
     awaitRefetchQueries: true,
   });
   const [addCard] = useMutation(ADD_CARD, {
-    refetchQueries: [{ query: GET_CARDS }],
-    awaitRefetchQueries: true,
+    update (cache, { data }) {
+      const newCardFromResponse = data?.addCard;
+      const cachedCards = cache.readQuery({
+        query: GET_CARDS,
+      });
+
+      cache.writeQuery({
+        query: GET_CARDS,
+        data: {
+          cards: cachedCards?.cards.concat(newCardFromResponse)
+        },
+      });
+    }
   });
 
   const setInitialState = () => {
@@ -98,14 +111,13 @@ const LoveList = () => {
 
   if (getCardsLoading) cardList = <div>...loading</div>
   if (getCardsError) cardList = <div>Error</div>
-  if (getCardsData && getCardsData.cards) cardList = (
+  if (getCardsData?.cards) cardList = (
     <CardList 
         data={getCardsData.cards}
         deleteCard={deleteCard}
         editCard={null}
       />
   )
-
   return (
     <Wrapper>
       {cardList}

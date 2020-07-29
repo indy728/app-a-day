@@ -4,7 +4,6 @@ import { device } from 'themes/media';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit } from '@fortawesome/free-solid-svg-icons'
 
-
 const Wrapper = styled.div`
   width: 100%;
   max-width: 80rem;
