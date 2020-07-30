@@ -92,10 +92,10 @@ const CardList = ({ data, deleteCard, editCard }) => {
 
       return (
         <Card key={id}>
-          <Icon className="icon edit" onClick={() => editCard({ variables: { id: card._id } })}>
+          <Icon className="icon edit" onClick={() => editCard('edit', content, id)}>
             <FontAwesomeIcon icon={faEdit} />
           </Icon>
-          <Icon className="icon close" onClick={() => deleteCard({ variables: { id: card._id } })}>
+          <Icon className="icon close" onClick={() => deleteCard({ variables: { id } })}>
             <FontAwesomeIcon icon={faTimes} />
           </Icon>
           <div className="content">{content}</div>

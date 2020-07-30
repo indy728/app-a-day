@@ -18,3 +18,12 @@ export const ADD_CARD = gql`
     }
   }
 `;
+
+export const EDIT_CARD = gql`
+  mutation EditCard($id: ID!, $content: String!) {
+    editCard(id: $id, content: $content) {
+      _id
+      content
+    }
+  }
+`;

@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { device } from 'themes/media';
-import AddCard from './AddCard';
+import Modal from './TextAreaModal';
 import CardList from './CardList';
 // import { useMutation, useQuery } from 'react-apollo';
 import { useMutation, useQuery } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { ADD_CARD, DELETE_CARD } from './mutations';
+import { ADD_CARD, DELETE_CARD, EDIT_CARD } from './mutations';
 import { GET_CARDS } from './queries';
 
 const Wrapper = styled.div`
@@ -49,6 +49,8 @@ const AddCardButton = styled.div`
 const LoveList = () => {
   const [showForm, setShowForm] = useState(false);
   const [value, setValue] = useState('');
+  const [modalType, setModalType] = useState('');
+  const [modalID, setModalID] = useState('');
   const { loading: getCardsLoading, error: getCardsError, data: getCardsData} = useQuery(GET_CARDS)
   
   // Sends another request from our backend which is not ideal
@@ -71,10 +73,16 @@ const LoveList = () => {
       });
     }
   });
+  // const [editCard] = useMutation(EDIT_CARD);
+  const [editCard] = useMutation(EDIT_CARD, {
+    refetchQueries: [{ query: GET_CARDS }],
+    awaitRefetchQueries: true,
+  });
 
   const setInitialState = () => {
-    setShowForm(false);
     setValue('');
+    setModalType('');
+    setModalID('');
   }
 
   const addCardHandler = () => {
@@ -95,7 +103,17 @@ const LoveList = () => {
         dateNumber,
         content: value,
       }
-    })
+    });
+    setInitialState();
+  }
+
+  const editCardHandler = () => {
+    editCard({
+      variables: {
+        id: modalID,
+        content: value,
+      }
+    });
     setInitialState();
   }
 
@@ -103,8 +121,16 @@ const LoveList = () => {
     setValue(event.target.value);
   }
 
-  const toggleFormHandler = () => {
-    setShowForm(!showForm);
+  const closeModal = () => {
+    setInitialState()
+  }
+
+  const buildModal = (type, editValue, id) => {
+    setModalType(type);
+    if (editValue && id) {
+      setValue(editValue);
+      setModalID(id);
+    }
   }
 
   let cardList = null;
@@ -113,24 +139,38 @@ const LoveList = () => {
   if (getCardsError) cardList = <div>Error</div>
   if (getCardsData?.cards) cardList = (
     <CardList 
-        data={getCardsData.cards}
-        deleteCard={deleteCard}
-        editCard={null}
-      />
+      data={getCardsData.cards}
+      deleteCard={deleteCard}
+      editCard={buildModal}
+    />
   )
+
+  let modal = null;
+
+  if (modalType === "add") modal = (
+    <Modal
+      submit={addCardHandler}
+      cancel={setInitialState}
+      changed={inputChangedHandler}
+      value={value}
+    />
+  )
+  if (modalType === "edit") modal = (
+    <Modal
+      submit={editCardHandler}
+      cancel={setInitialState}
+      changed={inputChangedHandler}
+      value={value}
+    />
+  )
+
   return (
     <Wrapper>
       {cardList}
-      <AddCard
-        visible={showForm}
-        submit={addCardHandler}
-        cancel={setInitialState}
-        changed={inputChangedHandler}
-        value={value}
-      />
-    <AddCardButton onClick={toggleFormHandler}>
-      <FontAwesomeIcon icon={faPlus} size="2x" />
-    </AddCardButton>
+      {modal}
+      <AddCardButton onClick={() => buildModal('add')}>
+        <FontAwesomeIcon icon={faPlus} size="2x" />
+      </AddCardButton>
     </Wrapper>
   );
 }

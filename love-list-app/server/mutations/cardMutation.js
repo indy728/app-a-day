@@ -21,10 +21,20 @@ const mutation = new GraphQLObjectType({
     deleteCard: {
       type: CardType,
       args: {
-        id: { type: GraphQLID }
+        id: { type: GraphQLNonNull(GraphQLID) }
       },
       resolve(parentValue, { id }) {
         return Card.deleteOne({ _id: mongoose.Types.ObjectId(id) });
+      }
+    },
+    editCard: {
+      type: CardType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        content: { type: GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parentValue, { id, content }) {
+        return Card.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: { content } });
       }
     }
   }

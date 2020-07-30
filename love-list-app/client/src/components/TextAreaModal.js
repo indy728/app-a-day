@@ -71,32 +71,24 @@ const ActionButtons = styled.div`
   }
 `;
 
-const AddCard = ({ visible, cancel, submit, changed, value }) => {
-  const form = !visible ? null : (
-    <Wrapper>
-      <CloseButton onClick={cancel}>Close</CloseButton>
-      <CardForm>
-        <CardInput type="textarea" onChange={changed} placeholder="say something nice" value={value} />
-        <ActionButtons>
-          <div className="cancel" onClick={cancel}>
-            Cancel
-          </div>
-          <div className="submit" onClick={submit}>
-            Submit
-          </div>
-        </ActionButtons>
-      </CardForm>
-    </Wrapper>
-  )
+const TextAreaModal = ({ cancel, submit, changed, value }) => (
+  <Wrapper>
+    <CloseButton onClick={cancel}>Close</CloseButton>
+    <CardForm>
+      <CardInput type="textarea" onChange={changed} placeholder="say something nice" value={value} />
+      <ActionButtons>
+        <div className="cancel" onClick={cancel}>
+          Cancel
+        </div>
+        <div className="submit" onClick={submit}>
+          Submit
+        </div>
+      </ActionButtons>
+    </CardForm>
+  </Wrapper>
+);
 
-  return (
-    <>
-      {form}
-    </>
-  );
-}
-
-AddCard.propTypes = {
+TextAreaModal.propTypes = {
 };
 
-export default AddCard;
+export default TextAreaModal;
